@@ -11,7 +11,9 @@ RUN apt update && apt install -y git python3-pip git python3-jinja2 \
       libgnutls28-dev openssl libtiff-dev pybind11-dev \
       meson cmake \
       python3-yaml python3-ply \
-      libglib2.0-dev libgstreamer-plugins-base1.0-dev
+      libglib2.0-dev libgstreamer-plugins-base1.0-dev \
+      ros-jazzy-rqt-image-view \
+      ros-jazzy-turtlesim
 
 # Clone and build raspberrypi's libcamera fork
 RUN git clone https://github.com/raspberrypi/libcamera.git \

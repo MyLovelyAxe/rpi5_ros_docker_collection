@@ -1,60 +1,93 @@
-# camera_ros in Docker on a RPi5 via Rasbian Bookworm 64bit lite
+# ROS jazzy in docker on Raspberry Pi 5 with Rasbian Bookworm 64bit with camera_ros
 
-An example of how to use [`camera_ros`](https://github.com/christianrauch/camera_ros/) with Raspberry Pi Cameras modules inside an arm64v8/ros:jazzy docker container, running on top of Raspbian OS 64bit Lite (Bookworm).
+This branch collects the docker configuration for ROS jazzy on Rasberry Pi OS with access of [camera module v3](https://www.raspberrypi.com/products/camera-module-3/), along with [camera_ros](https://github.com/christianrauch/camera_ros/) node.
 
-The example builds and installs raspberrypi's fork of libcamera for support of Raspberry Pi camera modules.
+The original master branch is forked from [camera_rpi5_ros2_docker](https://github.com/nguyen-v/camera_rpi5_ros2_docker) but with main changes:
 
-## Requirements
+ - Add rqt-image-view for visualize live-stream camera on Rapsberry Pi 5 itself
+ - Add turtlesim to check and learn
+ - Add user root in docker_run.sh to grand root permission in container
+ - Add access to display docker_run.sh
 
-- Raspberry Pi 5 (4BG Model tested)
-- Rasbian OS 64Bit Lite (Bookworm)
+## Test configuration
+
+- Raspberry Pi 5 (8GB Model tested)
+- Rasbian OS 64Bit (Bookworm)
 - Docker
-
-### Tested Cameras
-- Raspberry Pi Cam rev1.3 (OV5647)
-- Raspberry Pi NoIR Cam (OV5647)
-- Raspberry Pi Camera 3 (IMX708) - thanks to @dbaldwin for reporting
-
-Note: In my testing I did not need to change any parameters in `/boot/firmware/config.txt` on the host OS.
-
-### References
- - https://github.com/christianrauch/camera_ros/
- - https://github.com/raspberrypi/libcamera/
 
 ## Setup
 
-Clone this repo and make sure `docker-run.sh` is executable.
+Clone this repo, enter the branch `ros_rpios_jazzy_camera`, and make sure `docker_run.sh` is executable.
 
 ```
-git clone git@github.com:se1exin/camera_ros-in-docker-rpi5.git
-
-cd camera_ros-in-docker-rpi5
-
-chmod +x docker-run.sh
-
+git clone git@github.com:MyLovelyAxe/rpi5_ros_docker_collection.git
+cd rpi5_ros_docker_collection
+git checkout ros_rpios_jazzy_camera
+chmod +x docker_run.sh
 ```
 
-## Build
-From the command line on your raspberry pi, run the following to build the container with the tag `camera_ros`:
+Also, make sure your current `USER` is inside `groups`, in order to run the following commands without specifying sudo, i.e. use `$ docker` instead of `$ sudo docker`:
 
 ```
-docker build -t camera_ros .
+sudo usermod -aG docker $USER
 ```
 
-## Run
+Check if your `USER` is already in `groups` by:
+
+```
+groups
+```
+
+If your `USER` is in the returned list, then move on.
+
+## Build image
+
+Run the bash file to build the image whose name is the same with the branch name:
+
+```
+./build_image.sh
+```
+
+## Creat container
+
 Note: The docker build process adds the file `docker_entrypoint.sh` which sources the required ROS2 `setup.bash` files when the container starts.
 
-From the command line, run the following to start the docker container and the camera_ros node:
+From the command line, run the following to start the docker container and the `camera_ros` node:
 
 ```
-./docker-run.sh
+./docker_run.sh
 ```
 
+Check the current runnning container's name by:
 
-## Modify
-The last line of `docker-run.sh` is the command sent to the docker container when it starts. Modify this to - for example - change any ros params when starting the node.
+```
+docker ps
+```
 
-## Notes
-You can view the camera stream on another computer using `ros2 run rqt_image_view rqt_image_view`.
+## Test camera
 
-Note you may need to add your other IP address as `ROS_STATIC_PEERS` to the docker container to assist ROS2 network communication. E.g. add `-e ROS_STATIC_PEERS=some.internal.ip.address` to the `docker-run.sh` script.  
+Firstly, enable access of display for docker in a terminal:
+
+```
+xhost +local:docker
+```
+
+Remember: Run this command every time when reboot Raspberry Pi 5.
+
+Then test camera in other terminals:
+
+#### Terminal 1: start camera_ros node
+
+```
+docker exec -it <current_container_name> bash
+source docker_entrypoint.sh
+ros2 run camera_ros camera_node
+```
+
+#### Terminal 2: start qrt-image-view GUI
+
+```
+docker exec -it <current_container_name> bash
+source docker_entrypoint.sh
+ros2 run rqt_image_view rqt_image_view
+```

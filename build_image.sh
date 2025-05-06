@@ -1,0 +1,1 @@
+docker build -t ros_rpios_jazzy_camera .
