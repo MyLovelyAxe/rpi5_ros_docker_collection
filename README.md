@@ -45,6 +45,7 @@ If your `USER` is in the returned list, then move on.
 Run the bash file to build the image whose name is the same with the branch name:
 
 ```
+chmod +x build_image.sh
 ./build_image.sh
 ```
 
