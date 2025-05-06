@@ -22,7 +22,7 @@ Clone this repo, enter the branch `ros_rpios_jazzy_camera`, and make sure `docke
 ```
 git clone git@github.com:MyLovelyAxe/rpi5_ros_docker_collection.git
 cd rpi5_ros_docker_collection
-git checkout ros_rpios_jazzy_camera
+git checkout --track -b ros_rpios_jazzy_camera origin/ros_rpios_jazzy_camera
 chmod +x docker_run.sh
 ```
 
