@@ -1,60 +1,15 @@
-# camera_ros in Docker on a RPi5 via Rasbian Bookworm 64bit lite
+# Collection of docker configurations for ROS on Raspberry Pi 5
 
-An example of how to use [`camera_ros`](https://github.com/christianrauch/camera_ros/) with Raspberry Pi Cameras modules inside an arm64v8/ros:jazzy docker container, running on top of Raspbian OS 64bit Lite (Bookworm).
+This is a collection of docker configurations for ROS on Raspberry Pi 5, including different ROS versions or installed with different OS (e.g. Rasbian OS 64Bit, Ubuntu24.04)
 
-The example builds and installs raspberrypi's fork of libcamera for support of Raspberry Pi camera modules.
-
-## Requirements
-
-- Raspberry Pi 5 (4BG Model tested)
-- Rasbian OS 64Bit Lite (Bookworm)
-- Docker
-
-### Tested Cameras
-- Raspberry Pi Cam rev1.3 (OV5647)
-- Raspberry Pi NoIR Cam (OV5647)
-- Raspberry Pi Camera 3 (IMX708) - thanks to @dbaldwin for reporting
-
-Note: In my testing I did not need to change any parameters in `/boot/firmware/config.txt` on the host OS.
-
-### References
- - https://github.com/christianrauch/camera_ros/
- - https://github.com/raspberrypi/libcamera/
-
-## Setup
-
-Clone this repo and make sure `docker-run.sh` is executable.
+The branches' names indicate the focus and configuration, which follows this naming-style:
 
 ```
-git clone git@github.com:se1exin/camera_ros-in-docker-rpi5.git
-
-cd camera_ros-in-docker-rpi5
-
-chmod +x docker-run.sh
-
+ros_<OS version>_<ROS version>_<special focus>
 ```
 
-## Build
-From the command line on your raspberry pi, run the following to build the container with the tag `camera_ros`:
+For exmaple, branch `ros_rpios_jazzy_camera` contains the docker files for ROS jazzy when your RPI5 is installed with Raspberry Pi OS, which has camera access to [camera module 3](https://www.raspberrypi.com/products/camera-module-3/) along with [camera_ros](https://github.com/christianrauch/camera_ros/) node.
 
-```
-docker build -t camera_ros .
-```
+Checkout to the branch according to the docker configuration you need, and follow the `README.md` on that branch to build images and containers.
 
-## Run
-Note: The docker build process adds the file `docker_entrypoint.sh` which sources the required ROS2 `setup.bash` files when the container starts.
-
-From the command line, run the following to start the docker container and the camera_ros node:
-
-```
-./docker-run.sh
-```
-
-
-## Modify
-The last line of `docker-run.sh` is the command sent to the docker container when it starts. Modify this to - for example - change any ros params when starting the node.
-
-## Notes
-You can view the camera stream on another computer using `ros2 run rqt_image_view rqt_image_view`.
-
-Note you may need to add your other IP address as `ROS_STATIC_PEERS` to the docker container to assist ROS2 network communication. E.g. add `-e ROS_STATIC_PEERS=some.internal.ip.address` to the `docker-run.sh` script.  
+The original master branch is forked from [camera_rpi5_ros2_docker](https://github.com/nguyen-v/camera_rpi5_ros2_docker)
