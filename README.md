@@ -22,7 +22,7 @@ Clone this repo, enter the branch `ros_rpios_humble_camera`, and make sure `dock
 ```
 git clone git@github.com:MyLovelyAxe/rpi5_ros_docker_collection.git
 cd rpi5_ros_docker_collection
-git checkout ros_rpios_humble_camera
+git checkout --track -b ros_rpios_humble_camera origin/ros_rpios_humble_camera
 chmod +x docker_run.sh
 ```
 
