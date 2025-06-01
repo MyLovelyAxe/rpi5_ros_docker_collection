@@ -7,5 +7,5 @@ docker run -it --user root \
   -e DISPLAY=$DISPLAY \
   --group-add video \
   -e HOME=/tmp \
+  -e ROS_DISTRO=humble \
   ros_rpios_humble_camera \
-  bash
