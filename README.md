@@ -19,22 +19,21 @@ The original master branch is forked from [camera_rpi5_ros2_docker](https://gith
 
 Clone this repo, enter the branch `ros_rpios_humble_camera`, and make sure `docker_run.sh` is executable.
 
-```
-git clone git@github.com:MyLovelyAxe/rpi5_ros_docker_collection.git
+```bash
+git clone --branch ros_rpios_humble_camera git@github.com:MyLovelyAxe/rpi5_ros_docker_collection.git
 cd rpi5_ros_docker_collection
-git checkout --track -b ros_rpios_humble_camera origin/ros_rpios_humble_camera
 chmod +x docker_run.sh
 ```
 
 Also, make sure your current `USER` is inside `groups`, in order to run the following commands without specifying sudo, i.e. use `$ docker` instead of `$ sudo docker`:
 
-```
+```bash
 sudo usermod -aG docker $USER
 ```
 
 Check if your `USER` is already in `groups` by:
 
-```
+```bash
 groups
 ```
 
@@ -44,7 +43,7 @@ If your `USER` is in the returned list, then move on.
 
 Run the bash file to build the image whose name is the same with the branch name:
 
-```
+```bash
 chmod +x build_image.sh
 ./build_image.sh
 ```
@@ -55,13 +54,13 @@ Note: The docker build process adds the file `docker_entrypoint.sh` which source
 
 From the command line, run the following to start the docker container and the `camera_ros` node:
 
-```
+```bash
 ./docker_run.sh
 ```
 
 Check the current runnning container's name by:
 
-```
+```bash
 docker ps
 ```
 
@@ -69,7 +68,7 @@ docker ps
 
 Firstly, enable access of display for docker in a terminal:
 
-```
+```bash
 xhost +local:docker
 ```
 
@@ -79,7 +78,7 @@ Then test camera in other terminals:
 
 #### Terminal 1: start camera_ros node
 
-```
+```bash
 docker exec -it <current_container_name> bash
 source docker_entrypoint.sh
 ros2 run camera_ros camera_node
@@ -87,7 +86,7 @@ ros2 run camera_ros camera_node
 
 #### Terminal 2: start qrt-image-view GUI
 
-```
+```bash
 docker exec -it <current_container_name> bash
 source docker_entrypoint.sh
 ros2 run rqt_image_view rqt_image_view
